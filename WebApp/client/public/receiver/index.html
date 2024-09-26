@@ -6,13 +6,57 @@
   <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="../css/main.css" />
   <link rel="stylesheet" href="css/style.css" />
-  <title>Receiver Sample</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 20px;
+      }
+      #container {
+          max-width: 600px;
+          margin: 0 auto;
+          background: white;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+          text-align: center;
+          color: #333;
+      }
+      .button-container {
+          display: flex;
+          justify-content: space-around;
+          margin-top: 20px;
+      }
+      button {
+          padding: 10px 20px;
+          font-size: 16px;
+          color: white;
+          background-color: #007BFF;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #response {
+          margin-top: 20px;
+          padding: 10px;
+          background-color: #e2e3e5;
+          border-radius: 5px;
+      }
+  </style>
+  <title>Cities</title>
 </head>
 
 <body>
 
   <div id="container">
-    <h1>Receiver Sample</h1>
+    <h1>Cities</h1>
 
     <div id="warning" hidden="true"></div>
 
@@ -32,7 +76,7 @@
 
     <p>
       For more information about sample, see
-        <a href="https://docs.unity3d.com/Packages/com.unity.renderstreaming@3.1/manual/sample-broadcast.html">Broadcast sample</a> document page.
+      <a href="https://docs.unity3d.com/Packages/com.unity.renderstreaming@3.1/manual/sample-broadcast.html">Broadcast sample</a> document page.
     </p>
 
     <div id="message"></div>
@@ -41,12 +85,44 @@
       <a href="https://github.com/Unity-Technologies/UnityRenderStreaming/tree/develop/WebApp/client/public/receiver"
         title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
     </section>
+    
+    <div class="button-container">
+      <button onclick="sendCity('Izmir')">Izmir</button>
+      <button onclick="sendCity('Antalya')">Antalya</button>
+      <button onclick="sendCity('Mugla')">Mugla</button>
+      <button onclick="sendCity('KKTC')">KKTC</button>
+    </div>
+
+    <div id="response"></div>
   </div>
 
   <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
   <script src="https://unpkg.com/event-target@latest/min.js"></script>
   <script src="https://unpkg.com/resize-observer-polyfill@1.5.0/dist/ResizeObserver.global.js"></script>
   <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/websocket.js"></script>
+  
+  <script type="module">
+      import { sendCommand } from './js/websocket.js';
+
+      const cities = {
+          Izmir: { index: 0, coordinates: { latitude: 38.4192, longitude: 27.1287 } },
+          Antalya: { index: 1, coordinates: { latitude: 36.8969, longitude: 30.7133 } },
+          Mugla: { index: 2, coordinates: { latitude: 37.2153, longitude: 28.3630 } },
+          KKTC: { index: 3, coordinates: { latitude: 35.3330, longitude: 33.3651 } }
+      };
+
+      window.sendCity = function(city) {
+          const cityData = cities[city];
+          const commandData = {
+              command: 0,
+              index: cityData.index,
+              coordinates: cityData.coordinates
+          };
+
+          sendCommand(commandData);
+      }
+  </script>
 
 </body>
 
